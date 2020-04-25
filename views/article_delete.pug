@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1 #{title}: #{article.title}
+    p= article.body
+
+    form(method='POST' action='')
+        div.form-group
+            input#id.form-control(type='hidden' name='id' required='true' value=article._id)
+        button.btn.btn-primary(type='submit') Delete

@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    h1= title
+
+    form(method='POST' action='')
+        div.form-group
+            label(for='title') Title:
+            input#title.form-control(type='text' name='title'
+                value=(article === undefined ? '' : article.title))
+        div.form-group
+            label(for='body') Body:
+            textarea#body.form-control(name='body' rows=8)
+                | #{article === undefined ? '' : article.body}
+        button.btn.btn-primary(type='submit') Submit
+    
+    if errors
+        ul
+            for error in errors
+                li!= error.msg

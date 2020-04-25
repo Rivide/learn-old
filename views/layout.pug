@@ -1,0 +1,21 @@
+doctype html
+html(lang-'en-us')
+  head
+    title= title
+    link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous")
+    link(rel='stylesheet' href='/stylesheets/style.css')
+    
+  body
+    ul
+      li
+        a(href='/learn/article/create') Create article
+        
+    block content
+    
+    script(
+      src="https://code.jquery.com/jquery-3.5.0.min.js"
+      integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+      crossorigin="anonymous"
+    )
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js')
+    script(src='/javascripts/mdConverter.js')

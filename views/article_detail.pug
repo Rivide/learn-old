@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= article.title
+
+  p.md!= encode(article.body)
+
+  p
+    a(href=article.url+'/delete') Delete
+  p
+    a(href=article.url+'/update') Update
