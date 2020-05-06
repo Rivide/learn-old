@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+    h1 #{title}: #{course.title}
+
+    form(method='POST' action='')
+        input#id(type='hidden' name='id' required='true' value=course._id)
+        button(type='submit') Delete

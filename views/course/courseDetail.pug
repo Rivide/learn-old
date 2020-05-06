@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+    h1= course.title
+
+    p
+      a(href=course.url+'/delete') Delete
+    p
+      a(href=course.url+'/update') Update

@@ -1,9 +1,9 @@
-extends layout
+extends ../layout
 
 block content
   h1= title
   ul
-    each article in article_list
+    each article in articleList
       li 
         a(href=article.url) #{article.title}
     else
