@@ -23,17 +23,17 @@ const del = new controller.Delete(Article);
 exports.list = list.get('title body');
 exports.detail = detail.get();
 exports.createGet = create.get();
-exports.createPost = create.post([
+exports.createPost = create.post({validators: [
     check('title', 'Article title required').trim().isLength({ min: 1 }),
     check('title').escape(),
     check('body', 'Article body required').trim().isLength({ min: 1 })
-]);
+]});
 exports.updateGet = update.get();
-exports.updatePost = update.post([
+exports.updatePost = update.post({validators: [
     check('title', 'Article title required').trim().isLength({ min: 1 }),
     check('title').escape(),
     check('body', 'Article body required').trim().isLength({ min: 1 })
-]);
+]});
 exports.deleteGet = del.get();
 exports.deletePost = del.post();
 /*exports.detail = function(req, res, next) {

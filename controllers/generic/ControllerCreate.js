@@ -50,9 +50,22 @@ module.exports = class ControllerCreate extends ControllerFunction {
             }
         });
     }
-    getFields(reqBody) {
-        
-    }
+    /*extractFields(reqBody) {
+        const fields = {
+            single: [],
+            list: []
+        };
+        for (let [key, value] in Object.entries(this.Model.schema)) {
+            let fieldValue;
+            if (Array.isArray(value)) {
+                fields.list.push()
+            }
+            else {
+                fieldValue = value;
+            }
+            
+        }
+    }*/
     getMiddleware(req, res, next) {
         res.render(this.getViewPath(), this.getContext());
     }
@@ -71,9 +84,9 @@ module.exports = class ControllerCreate extends ControllerFunction {
     get() {
         return this.getMiddleware;
     }
-    post(validators) {
-        if (validators) {
-            return validators.concat([this.postMiddleware]);
+    post(args) {
+        if (args.validators) {
+            return args.validators.concat([this.postMiddleware]);
         }
         return this.postMiddleware;
     }
