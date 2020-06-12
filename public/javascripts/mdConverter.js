@@ -1,5 +1,3 @@
-showdown.setOption('simpleLineBreaks', 'true');
-
 const katexExtension = showdownKatex({
     delimiters: [
         { left: '$$', right: '$$', display: true },
