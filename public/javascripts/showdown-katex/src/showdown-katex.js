@@ -71,7 +71,7 @@ const showdownKatex = userConfig => () => {
       type: 'output',
       filter(html = '') {
         // parse html
-        const wrapper = document;//parser.parseFromString(html, 'text/html').body;
+        const wrapper = parser.parseFromString(html, 'text/html').body;
 
         if (asciimathDelimiters.length) {
           // convert inline asciimath to inline latex
