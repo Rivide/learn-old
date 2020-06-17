@@ -14,26 +14,26 @@ const controller = require('./generic/genericController');
         res.render('articleList', { title: 'Article List', articleList: articleList});
     })
 };*/
+const args = {
+    validators: [
+        check('title', 'Article title required').trim().isLength({ min: 1 }),
+        check('title').escape(),
+        check('body', 'Article body required').trim().isLength({ min: 1 })
+    ]
+}
+
 const list = new controller.List(Article);
 const detail = new controller.Detail(Article);
-const create = new controller.Create(Article);
-const update = new controller.Update(Article);
+const create = new controller.Create(Article, args);
+const update = new controller.Update(Article, args);
 const del = new controller.Delete(Article);
 
 exports.list = list.get('title body');
 exports.detail = detail.get();
 exports.createGet = create.get();
-exports.createPost = create.post({validators: [
-    check('title', 'Article title required').trim().isLength({ min: 1 }),
-    check('title').escape(),
-    check('body', 'Article body required').trim().isLength({ min: 1 })
-]});
+exports.createPost = create.post();
 exports.updateGet = update.get();
-exports.updatePost = update.post({validators: [
-    check('title', 'Article title required').trim().isLength({ min: 1 }),
-    check('title').escape(),
-    check('body', 'Article body required').trim().isLength({ min: 1 })
-]});
+exports.updatePost = update.post();
 exports.deleteGet = del.get();
 exports.deletePost = del.post();
 /*exports.detail = function(req, res, next) {

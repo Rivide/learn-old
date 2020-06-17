@@ -7,8 +7,9 @@ function bindMethods(object) {
         });
 }
 module.exports = class ControllerFunction {
-    constructor(Model) {
+    constructor(Model, args) {
         this.Model = Model;
+        this.args = args;
         bindMethods(this);
     }
 }

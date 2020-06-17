@@ -1,6 +1,7 @@
 const ControllerFunction = require('./ControllerFunction');
 const toCamelCase = require('./toCamelCase');
 const encode = require('../encode');
+const debug = require('debug')('learn:server:ControllerDetail');
 
 module.exports = class ControllerDetail extends ControllerFunction {
     getContext(doc) {
@@ -15,6 +16,10 @@ module.exports = class ControllerDetail extends ControllerFunction {
     getViewPath() {
         const camelCase = toCamelCase(this.Model.modelName);
         return camelCase + '/' + camelCase + 'Detail';
+    }
+    getQueries() {
+        const queries = {};
+        //queries[toCamelCase(this.Model.modelName)] 
     }
     getMiddleware(req, res, next) {
         this.Model.findById(req.params.id,
@@ -33,7 +38,7 @@ module.exports = class ControllerDetail extends ControllerFunction {
             }
         );
     }
-    get(fields) {
+    get() {
         return this.getMiddleware;
     }
 }

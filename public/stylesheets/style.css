@@ -24,6 +24,15 @@ h2 {
 h3 {
   font-size: 1.2em;
 }
+h4 {
+  font-size: 0.9em;
+}
+h5 {
+  font-size: 0.6em;
+}
+h6 {
+  font-size: 0.3em;
+}
 #article-wrapper {
   width: 55%;
   margin: 60px auto 0;

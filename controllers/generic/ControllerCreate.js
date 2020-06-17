@@ -1,11 +1,9 @@
 const ControllerFunction = require('./ControllerFunction');
 const { validationResult } = require('express-validator');
 const toCamelCase = require('./toCamelCase');
+const debug = require('debug')('learn:server:ControllerCreate')
 
 module.exports = class ControllerCreate extends ControllerFunction {
-    constructor(Model) {
-        super(Model);
-    }
     createDoc(fields) {
         return new this.Model(fields);
     }
@@ -28,16 +26,16 @@ module.exports = class ControllerCreate extends ControllerFunction {
         return camelCase + '/' + camelCase + 'Form';
     }
     saveDoc(doc, res, next) {
-        doc.save(function(err) {
+        doc.save(function (err) {
             if (err) {
                 return next(err);
             }
-            
+
             res.redirect(doc.url);
         });
     }
-    validatedSaveDoc(doc, fields, res, next) {
-        this.Model.findOne(fields).exec((err, existingDoc) => {
+    validatedSaveDoc(doc, searchFields, res, next) {
+        this.Model.findOne(searchFields).exec((err, existingDoc) => {
             if (err) {
                 return next(err);
             }
@@ -66,27 +64,38 @@ module.exports = class ControllerCreate extends ControllerFunction {
             
         }
     }*/
+    getFields(req) {
+        // used to create the doc
+        debug(req.body);
+        return req.body;
+    }
+    getSearchFields(req) {
+        // used to search for duplicate docs
+        return req.body;
+    }
     getMiddleware(req, res, next) {
+        debug('test');
         res.render(this.getViewPath(), this.getContext());
     }
     postMiddleware(req, res, next) {
+        debug('test');
         const errors = validationResult(req);
 
-        const doc = this.createDoc(req.body);
+        const doc = this.createDoc(this.getFields(req));
 
         if (!errors.isEmpty()) {
             res.render(this.getViewPath(), this.getContext(doc, errors));
         }
         else {
-            this.validatedSaveDoc(doc, req.body, res, next);
+            this.validatedSaveDoc(doc, this.getSearchFields(req), res, next);
         }
     }
     get() {
         return this.getMiddleware;
     }
-    post(args) {
-        if (args.validators) {
-            return args.validators.concat([this.postMiddleware]);
+    post() {
+        if (this.args.validators) {
+            return this.args.validators.concat([this.postMiddleware]);
         }
         return this.postMiddleware;
     }
