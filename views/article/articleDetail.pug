@@ -2,9 +2,9 @@ extends ../layout
 
 block content
   div#article-wrapper
-    h1= article.title
+    h1#title= article.title
 
-    p.md!= encode(article.body)
+    div.md!= encode(article.body)
 
     p
       a(href=article.url+'/delete') Delete

@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-    h1 #{title}: #{course.title}
+    h1#title #{title}: #{course.title}
 
     form(method='POST' action='')
         input#id(type='hidden' name='id' required='true' value=course._id)
