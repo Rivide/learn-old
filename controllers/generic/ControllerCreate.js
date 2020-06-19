@@ -74,11 +74,10 @@ module.exports = class ControllerCreate extends ControllerFunction {
         return req.body;
     }
     getMiddleware(req, res, next) {
-        debug('test');
         res.render(this.getViewPath(), this.getContext());
     }
     postMiddleware(req, res, next) {
-        debug('test');
+        console.log(this);
         const errors = validationResult(req);
 
         const doc = this.createDoc(this.getFields(req));
