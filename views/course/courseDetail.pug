@@ -4,11 +4,19 @@ block content
     h1#title= course.title
 
     ul
-      each article in course.articles
+      each node in course.nodes
         li
-          a(href=article.url) #{article.title}
+          a(href=node.article.url) #{node.article.title}
+    
+    div#map
+      canvas#canvas
 
     p
       a(href=course.url+'/delete') Delete
     p
       a(href=course.url+'/update') Update
+
+block scripts
+  script.
+    const course = !{JSON.stringify(course)};
+  script(src='/javascripts/courseDetail.js')

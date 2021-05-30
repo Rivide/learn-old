@@ -118,9 +118,9 @@ class CourseUpdate extends controller.Update {
             node.article = node.article._id;
 
             const doc = new Node(node);
-            
+
+            // ensure update instead of insert
             if (node._id) {
-                // ensure update instead of insert
                 doc.isNew = false;
             }
             else {
@@ -162,7 +162,12 @@ class CourseUpdate extends controller.Update {
 }
 class CourseDetail extends controller.Detail {
     getMiddleware(req, res, next) {
-        Course.findById(req.params.id).populate('articles').exec((err, doc) => {
+        Course.findById(req.params.id).populate({
+            path: 'nodes',
+            populate: {
+                path: 'article next'
+            }
+        }).exec((err, doc) => {
             if (err) {
                 return next(err);
             }
