@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  h1#title= course.title
+
+  ul
+    each article in course.articles
+      li
+        a(href=article.url) #{article.title}
+
+  div#map
+    canvas#canvas
+    select#article(placeholder='Select article' name='articles')
+        each article in articles
+          option(value=article._id) #{article.title}
+  button#submit-button(type='submit') Submit
+
+  p
+    a(href=course.url+'/delete') Delete
+  p
+    a(href=course.url+'/update') Update
+
+block scripts
+  script.
+    const course = !{JSON.stringify(course)};
+  script(src='/javascripts/courseUpdate.js')
+

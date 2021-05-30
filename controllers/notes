@@ -1,0 +1,8 @@
+idea: replace node graph with array of parent-children pairs
+/*
+parent = {
+  id: node,
+  children: [node]
+}
+*/
+replace course.nodes field instead of adding new one

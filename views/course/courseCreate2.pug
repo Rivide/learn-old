@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+    h1#title= course.title
+
+    ul
+      each article in course.articles
+        li
+          a(href=article.url) #{article.title}      
+
+    p
+      a(href=course.url+'/delete') Delete
+    p
+      a(href=course.url+'/update') Update

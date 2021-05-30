@@ -16,6 +16,7 @@ $('#append-button').on('click', function() {
 
     ulLength++;
 });
+
 function increment(fieldName, num) {
     return fieldName.replace(/[0-9]*$/, num);
 }

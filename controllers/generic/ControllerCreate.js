@@ -66,7 +66,6 @@ module.exports = class ControllerCreate extends ControllerFunction {
     }*/
     getFields(req) {
         // used to create the doc
-        debug(req.body);
         return req.body;
     }
     getSearchFields(req) {

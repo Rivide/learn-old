@@ -5,13 +5,20 @@ const debug = require('debug')('learn:server:ControllerUpdate')
 
 
 module.exports = class ControllerUpdate extends ControllerCreate {
+    getID(req) {
+        return req.params.id;
+    }
     getContext(doc, errors) {
         const context = super.getContext(doc, errors);
         context.title = 'Update ' + this.Model.modelName;
         return context;
     }
+    getFields(req) {
+        // used to create the doc
+        return {_id: this.getID(req), ...req.body};
+    }
     getMiddleware(req, res, next) {
-        this.Model.findById(req.params.id, (err, doc) => {
+        this.Model.findById(this.getID(req), (err, doc) => {
             if (err) {
                 return next(err);
             }
@@ -37,16 +44,17 @@ module.exports = class ControllerUpdate extends ControllerCreate {
     postMiddleware(req, res, next) {
         const errors = validationResult(req);
 
-        const doc = this.createDoc({
-            _id: req.params.id,
+        /*const doc = this.createDoc({
+            _id: this.getID(req),
             ...req.body
-        });
-
+        });*/
+        const doc = this.createDoc(this.getFields(req));
+        
         if (!errors.isEmpty()) {
             res.render(this.getViewPath(), this.getContext(doc, errors));
         }
         else {
-            this.validatedSaveDoc(doc, res, next, req.params.id);
+            this.validatedSaveDoc(doc, res, next, this.getID(req));
         }
     }
 }
