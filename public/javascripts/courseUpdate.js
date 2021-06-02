@@ -1,22 +1,13 @@
-const xhr = new XMLHttpRequest();
-xhr.onreadystatechange = function () {
-  if (this.readyState == 4 && this.status == 200) {
-    console.log('t');
-  }
-}
+// const xhr = new XMLHttpRequest();
+// xhr.onreadystatechange = function () {
+//   if (this.readyState == 4 && this.status == 200) {
+//     console.log('t');
+//   }
+// }
 const courseCreator = (function () {
   const map = $('#map');
 
   const nodes = course.nodes.slice();
-
-  /*function toNodeList(nodes) {
-    let nextNodes = nodes.reduce((next, node) => next.concat(node.next), []);
-    if (nextNodes.length) {
-      nextNodes = toNodeList(nextNodes);
-    }
-
-    return nodes.concat(nextNodes);
-  }*/
 
   function createNode(x, y, article) {
     const node = { x, y, article, next: [] };
