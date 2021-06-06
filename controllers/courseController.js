@@ -15,57 +15,43 @@ class CourseCreate extends controller.Create {
             res.render(this.getViewPath(), { ...this.getContext(), articles });
         });
     }
-    /*getFields(req) {
-        const fields = super.getFields(req);
-        async.parallel(fields.articles.map(article => callback => ))
-    }*/
 }
 class CourseUpdate extends controller.Update {
-    /*populateNodes(nodes) {
-        //console.log(nodes);
-        nodes.populate('article next').then(nodes => console.log(nodes));
-
-        /*nodes.forEach(node => {
-            this.populateNodes(node.next);
-        });*/
-    //}
-    populateNodes(course, nodes, fields = { path: 'nodes', populate: { path: 'next article' } }, lastPopulate = fields.populate) {
-        /*fields = {
-            path: 'nodes',
-            populate: {
-                path: 'next article',
-                populate: {
-                    path: 'next article'
-                }
-            }
-        }*/
+    // populateNodes(course, nodes, fields = { path: 'nodes', populate: { path: 'next article' } }, lastPopulate = fields.populate) {
+    //     /*fields = {
+    //         path: 'nodes',
+    //         populate: {
+    //             path: 'next article',
+    //             populate: {
+    //                 path: 'next article'
+    //             }
+    //         }
+    //     }*/
         
-        return new Promise((resolve, reject) => {
-            course.populate(fields).then(popCourse => {
-                nodes = nodes || popCourse.nodes;
-                const nextNodes = nodes.reduce((next, node) => next.concat(node.next), []);
+    //     return new Promise((resolve, reject) => {
+    //         course.populate(fields).then(popCourse => {
+    //             nodes = nodes || popCourse.nodes;
+    //             const nextNodes = nodes.reduce((next, node) => next.concat(node.next), []);
 
-                if (nextNodes.length) {
-                    lastPopulate.populate = Object.assign({}, lastPopulate);
-                    this.populateNodes(course, nextNodes, fields, lastPopulate.populate).then(finalCourse => resolve(finalCourse));
-                }
-                else {
-                    resolve(popCourse);
-                }
-            });
-        });
-    }
+    //             if (nextNodes.length) {
+    //                 lastPopulate.populate = Object.assign({}, lastPopulate);
+    //                 this.populateNodes(course, nextNodes, fields, lastPopulate.populate).then(finalCourse => resolve(finalCourse));
+    //             }
+    //             else {
+    //                 resolve(popCourse);
+    //             }
+    //         });
+    //     });
+    // }
     getMiddleware(req, res, next) {
         async.parallel({
             course: callback => {
-                /*const course = */Course.findById(req.params.id).populate({
+                Course.findById(req.params.id).populate({
                     path: 'nodes',
                     populate: {
                         path: 'article next'
                     }
                 }).exec(callback);
-
-                //this.populateNodes(course).then(popCourse => course.exec(callback));
             },
             articles: callback => {
                 Article.find({}, callback);
@@ -74,87 +60,77 @@ class CourseUpdate extends controller.Update {
             if (err) {
                 return next(err);
             }
-            //console.log(results.course.nodes);
-            //console.log(results.course);
             res.render(this.getViewPath(), { ...this.getContext(), ...results });
-            //console.log(results.articles[0]);
         });
     }
-    saveNodes(nodes, next, nodeDict) {
-        return nodes.map(node => {
-            console.log(node);
-            console.log(node.next[0]);
-            console.log(node === node.next[0]);
-            if (node.next.length) {
-                //console.log('t1');
-                node.next = this.saveNodes(node.next, next);
-                //console.l
-            }
+    // saveNodes(nodes, next, nodeDict) {
+    //     return nodes.map(node => {
+    //         console.log(node);
+    //         console.log(node.next[0]);
+    //         console.log(node === node.next[0]);
+    //         if (node.next.length) {
+    //             //console.log('t1');
+    //             node.next = this.saveNodes(node.next, next);
+    //             //console.l
+    //         }
 
-            node.article = node.article._id;
+    //         node.article = node.article._id;
 
-            const doc = new Node(node);
+    //         const doc = new Node(node);
 
-            if (node._id) {
-                doc.isNew = false;
-            }
+    //         if (node._id) {
+    //             doc.isNew = false;
+    //         }
 
-            doc.save(err => {
-                if (err) {
-                    return next(err);
-                }
-            });
+    //         doc.save(err => {
+    //             if (err) {
+    //                 return next(err);
+    //             }
+    //         });
 
-            return doc._id;
-        });
-    }
+    //         return doc._id;
+    //     });
+    // }
     postMiddleware(req, res, next) {
         let nodes = JSON.parse(req.body.nodes);
-        //console.log(nodes[0].next[0].article);
 
-        //req.body.nodes = this.saveNodes(nodes, next);
-        req.body.nodes = nodes.map(node => {
-            // add comment
-            node.article = node.article._id;
-
-            const doc = new Node(node);
-
-            // ensure update instead of insert
-            if (node._id) {
-                doc.isNew = false;
-            }
-            else {
-                console.log(doc._id);
+        async.parallel(nodes.filter(node => !node._id).map(node => callback => {
+            const nodeDoc = new Node();
+            nodeDoc.save({ validateBeforeSave: false }, callback)
+            node._id = nodeDoc._id;
+            debug("NODE ID UPDATED");
+            debug(node._id);
+        }), err => {
+            debug("Nodes inserted.");
+            if (err) {
+                return next(err);
             }
 
-            doc.save(err => {
+            async.parallel(nodes.map(node => callback => {
+                Node.findById(node._id, (err, existingDoc) => {
+                    if (err) {
+                        return callback(err, existingDoc);
+                    }
+                    debug("NODE: ");
+                    debug(node);
+                    existingDoc.x = node.x;
+                    existingDoc.y = node.y;
+                    existingDoc.article = node.article._id;
+                    existingDoc.next = node.next.map(nextNodeIndex => nodes[nextNodeIndex]._id);
+
+                    existingDoc.save(callback);
+                });
+            }), (err, savedNodes) => {
+                debug("Nodes saved.");
+
                 if (err) {
                     return next(err);
                 }
+                req.body.nodes = savedNodes.map(node => node._id);
+                debug(req.body.nodes);
+                super.postMiddleware(req, res, next);
             });
-
-            return doc._id;
         });
-
-        return super.postMiddleware(req, res, next);
-        //nodes.forEach(node => console.log(node));
-        /*req.body.nodes = nodes.map(node => {
-            //console.log(node);
-            node.article = node.article._id;
-            const nodeDoc = new Node(node);
-            if (node._id) {
-                nodeDoc.isNew = false;
-            }
-            nodeDoc.save(err => {
-                if (err) {
-                    return next(err);
-                }
-            });
-            console.log(nodeDoc);
-            return nodeDoc._id;
-        });
-
-        return super.postMiddleware(req, res, next);*/
     }
     getViewPath() {
         return 'course/courseUpdate';
@@ -177,6 +153,8 @@ class CourseDetail extends controller.Detail {
 
                 return next(err);
             }
+
+            debug(doc.nodes)
 
             res.render(this.getViewPath(), this.getContext(doc));
         });

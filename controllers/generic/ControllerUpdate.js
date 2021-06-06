@@ -35,7 +35,7 @@ module.exports = class ControllerUpdate extends ControllerCreate {
             if (err) {
                 return next(err);
             }
-            res.redirect(newDoc.url);
+            //res.redirect(newDoc.url);
         });
     }
     validatedSaveDoc(doc, res, next, id) {

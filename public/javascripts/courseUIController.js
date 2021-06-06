@@ -48,14 +48,20 @@ const CourseUIController = (function () {
   //   }
   // }
   return class {
-    constructor(nodes, canvasTag, containerTag) {
+    constructor(nodes, canvasID, containerID) {
       this.nodes = nodes;
-      this.canvas = document.getElementById(canvasTag);
+      this.canvas = document.getElementById(canvasID);
       this.ctx = canvas.getContext("2d");
-      this.container = $(`#${containerTag}`);
+      this.container = $(`#${containerID}`);
     }
-    createHTMLNodes() {
-      this.nodes.forEach((node, key) => this.container.append(createHTMLNode(node, key)));
+    createHTMLNode(node, key) {
+      return $(`<a href='${node.article.url}'><div class='node' value='${key}' style='left:${node.x}px; top:${node.y}px;'>${node.article.title}</div></a>`);
+    }
+    appendHTMLNode(node, key) {
+      this.container.append(this.createHTMLNode(node, key))
+    }
+    appendHTMLNodes() {
+      this.nodes.forEach((node, key) => this.appendHTMLNode(node, key));
     }
     renderCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
