@@ -116,7 +116,7 @@ class CourseUpdate extends controller.Update {
                     existingDoc.x = node.x;
                     existingDoc.y = node.y;
                     existingDoc.article = node.article._id;
-                    existingDoc.next = node.next.map(nextNodeIndex => nodes[nextNodeIndex]._id);
+                    existingDoc.next = node.next.map(nextNodeKey => nodes.find(foundNode => foundNode.key == nextNodeKey)._id);
 
                     existingDoc.save(callback);
                 });

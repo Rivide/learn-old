@@ -54,14 +54,14 @@ const CourseUIController = (function () {
       this.ctx = canvas.getContext("2d");
       this.container = $(`#${containerID}`);
     }
-    createHTMLNode(node, key) {
-      return $(`<a href='${node.article.url}'><div class='node' value='${key}' style='left:${node.x}px; top:${node.y}px;'>${node.article.title}</div></a>`);
+    createHTMLNode(node) {
+      return $(`<a href='${node.article.url}'><div class='node' style='left:${node.x}px; top:${node.y}px;'>${node.article.title}</div></a>`);
     }
-    appendHTMLNode(node, key) {
-      this.container.append(this.createHTMLNode(node, key))
+    appendHTMLNode(node) {
+    this.container.append(this.createHTMLNode(node))
     }
     appendHTMLNodes() {
-      this.nodes.forEach((node, key) => this.appendHTMLNode(node, key));
+      this.nodes.forEach(node => this.appendHTMLNode(node));
     }
     renderCanvas() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
